@@ -1,0 +1,40 @@
+version: '3'
+# docker-compose -p "PO2_Backend" up -d
+services:
+  PO2_Backend:
+    image: po2_backend:latest
+    ports:
+      - "8090:8080"
+    depends_on:
+      PostgresSQL:
+        condition: service_healthy
+    networks:
+      - rede
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgresSQL:5432/PO2_Trabalho
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+  PostgresSQL:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=PO2_Trabalho
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rede
+    volumes:
+      - pg-data:/docker-entrypoint-initdb.d
+
+volumes:
+  pg-data:
+networks:
+  rede:
+    driver: bridge
+
