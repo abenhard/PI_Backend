@@ -32,10 +32,6 @@ public class CidadeService {
     public Cidade findById(Long id){
         return this.repository.findById(id).get();
     }
-    public Cidade getCidadePorNomeOuUf(String nome, UF uf)
-    {
-        return this.repository.getCidadeByNomeOrUf(nome, uf);
-    }
     public void atualizar(Cidade cidade){
         Cidade cidadeAtualizar = this.repository.getReferenceById(cidade.getId());
         cidadeAtualizar.setNome(cidade.getNome());

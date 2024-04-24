@@ -12,7 +12,7 @@ import lombok.Setter;
 
 
 
-@Entity(name="Endereco")
+@Entity
 @Table(name ="enderecos")
 @Getter
 @Setter

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-@Entity(name="Estado")
+@Entity
 @Table(name ="estados")
 @Getter
 @Setter
@@ -22,7 +22,7 @@ public class Estado {
 
     private String nome;
 
-    @OneToMany(mappedBy = "estados")
+    @OneToMany(mappedBy = "estado")
     @JsonIgnore
     private List<Cidade> cidades;
 }

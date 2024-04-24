@@ -3,16 +3,12 @@ package br.csi.PI_Backend.model.funcionario;
 import br.csi.PI_Backend.model.pessoa.Pessoa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-@Entity(name ="Funcionario")
+@Entity
 @Table(name ="funcionarios")
 @Getter
 @Setter
@@ -27,21 +23,19 @@ public class Funcionario {
 
     @NotBlank
     @OneToOne(cascade=CascadeType.PERSIST)
-    @Column(name = "pessoa_id")
+    @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
     @NotBlank
     @OneToOne(cascade=CascadeType.PERSIST)
-    @Column(name = "cargo_id")
+    @JoinColumn(name = "cargo_id")
     private Cargo cargo;
 
     @NotBlank
-    @NotNull
     @Column(name = "login")
     private String login;
 
     @NotBlank
-    @NotNull
     @Column(name = "senha")
     private String senha;
 
@@ -49,16 +43,7 @@ public class Funcionario {
     @Column(name = "ativo")
     private Boolean ativo;
 
-    @NotBlank
-    @Column(name = "data_entrada")
-    private Date data_entrada;
-
-    @Column(name = "data_saida")
-    private Date data_saida;
-
-    @NotBlank
-    @NotNull
-    @Column(name = "salario")
-    private BigDecimal salario;
-
+    public String getCargoString(){
+        return cargo.toString();
+    }
 }

@@ -34,7 +34,7 @@ public class EnderecoService {
 
 
         Estado estado = ufService.getUfPorNome(enderecoDTO.getUf());
-        enderecoSalvar.setCidade(cidadeService.getOrCreateCidade(enderecoDTO.getCidade(), estado));
+        enderecoSalvar.setCidade(cidadeService.getOrCreateCidade(enderecoDTO.getCidade(), estado.getNome()));
 
         Pessoa pessoa = pessoaService.findByCpf(cpf);
         enderecoSalvar.setPessoa(pessoa);

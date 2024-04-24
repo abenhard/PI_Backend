@@ -32,10 +32,6 @@ public class CidadeService {
     public Cidade findById(Long id){
         return this.repository.findById(id).get();
     }
-    public Cidade getCidadePorNomeOuUf(String nome, Estado estado)
-    {
-        return this.repository.getCidadeByNomeOrUf(nome, estado);
-    }
     public void atualizar(Cidade cidade){
         Cidade cidadeAtualizar = this.repository.getReferenceById(cidade.getId());
         cidadeAtualizar.setNome(cidade.getNome());
@@ -45,14 +41,14 @@ public class CidadeService {
         this.repository.deleteById(id);
     }
     @Transactional
-    public Cidade getOrCreateCidade(String nome, Estado estado) {
-        Optional<Cidade> existingCidade = Optional.ofNullable(this.repository.getCidadeByNomeOrUf(nome, estado));
+    public Cidade getOrCreateCidade(String nome, String estado) {
+        Optional<Cidade> existingCidade = Optional.ofNullable(this.repository.findByNomeAndEstadoNome(nome, estado));
         if (existingCidade.isPresent()) {
             return existingCidade.get(); // Return the existing Cidade if found
         } else {
             Cidade newCidade = new Cidade();
             newCidade.setNome(nome);
-            newCidade.setEstado(estado);
+            newCidade.setEstado(estadoRepository.getEstadoByNome(estado));
             return this.repository.save(newCidade); // Create and return a new Cidade
         }
     }

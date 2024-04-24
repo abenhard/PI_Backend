@@ -8,6 +8,6 @@ import java.util.Optional;
 @Repository
 public interface CidadeRepository extends JpaRepository<Cidade, Long> {
     public Cidade getById(Long id);
-    public Cidade getCidadeByNomeOrUf(String nome, Estado estado);
+    Cidade findByNomeAndEstadoNome(String nome, String estadoNome);
     public Optional<Cidade> findById(Long id);
 }

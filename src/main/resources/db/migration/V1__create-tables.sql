@@ -14,20 +14,19 @@ create table pessoas(
     email varchar(50),
     telefone varchar(20),
     whatsapp varchar(20),
-    cpf varchar(20) not null unique,
-    data_nascimento date not null
+    cpf varchar(20) not null unique
   );
 CREATE TABLE enderecos (
-    id serial NOT NULL PRIMARY KEY,
-    pessoa_id NOT NULL,
-    complemento varchar(150),
-    bairro varchar(100) NOT NULL,
-    rua varchar(100)NOT NULL,
-    cep varchar(9) NOT NULL,
-    numero varchar(15) NOT NULL,
-    cidade_id integer NOT NULL,
-    FOREIGN KEY (pessoa_id) REFERENCES pessoas(id),
-    FOREIGN KEY (cidade_id) REFERENCES cidades(id)
+                           id serial NOT NULL PRIMARY KEY,
+                           pessoa_id integer NOT NULL,
+                           complemento varchar(150),
+                           bairro varchar(100) NOT NULL,
+                           rua varchar(100) NOT NULL,
+                           cep varchar(9) NOT NULL,
+                           numero varchar(15) NOT NULL,
+                           cidade_id integer NOT NULL,
+                           FOREIGN KEY (pessoa_id) REFERENCES pessoas(id),
+                           FOREIGN KEY (cidade_id) REFERENCES cidades(id)
 );
 CREATE TABLE cargos(
     id serial not null primary key,
@@ -40,9 +39,6 @@ CREATE TABLE funcionarios(
     login varchar(60) not null unique,
     senha varchar(60) not null,
     ativo bool not null,
-    data_de_entrada date not null,
-    data_de_saida date,
-    salario decimal not null,
     FOREIGN KEY (pessoa_id) REFERENCES pessoas(id),
     FOREIGN KEY (cargo_id) references cargos(id)
 );
@@ -62,14 +58,10 @@ CREATE table ordens_de_servico(
     funcionario_id integer not null,
     tipo_de_servico_id integer not null,
     status_id integer not null,
-    descricao varchar(150) not null,
-    cpu varchar(50),
-    placa_de_video varchar(50),
-    placa_mae varchar(50),
-    memoria_ram varchar(50),
+    descricao_problema varchar(150) not null,
     produto_extra varchar(150),
     custo_total decimal,
-    detalhes_do_servico VARCHAR(300),
+    relatorio_tecnico VARCHAR(300),
     data_criacao timestamp not null,
     data_previsao date,
     data_entrega date,

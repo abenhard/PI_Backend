@@ -25,12 +25,7 @@ public class EnderecoController {
     @GetMapping("/{id}")
     public Endereco endereco(@PathVariable Long id){ return this.service.findById(id);}
 
-    @GetMapping
-    public ResponseEntity<List<EnderecoDTO>> listar(HttpServletRequest request){
-        String token = request.getHeader("Authorization").replace("Bearer ", ""); // Extract token from the request header
-        String login = tokenService.getSubject(token);
-        return ResponseEntity.ok(this.service.listar(login));
-    }
+
 
     @PostMapping
     @Transactional

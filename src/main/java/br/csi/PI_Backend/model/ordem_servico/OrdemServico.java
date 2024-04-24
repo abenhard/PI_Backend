@@ -29,54 +29,38 @@ public class OrdemServico {
 
     @NotNull
     @NotBlank
-    @Column(name = "pessoa_id")
     @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
     @NotNull
     @NotBlank
-    @Column(name = "funcionario_id")
     @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
     @NotNull
     @NotBlank
-    @Column(name = "status_id")
     @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "status_id")
     private Status status;
 
     @NotNull
     @NotBlank
-    @Column(name = "tipo_de_servico_id")
     @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "tipo_de_servico_id")
     private Tipo_Servico tipo_servico;
 
     @NotNull
     @NotBlank
-    @Column(name = "descricao")
-    private String descricao;
-
-    @Column(name = "cpu")
-    private String cpu;
-
-    @Column(name = "placa_de_video")
-    private String placa_de_video;
-
-    @Column(name = "placa_mae")
-    private String placa_mae;
-
-    @Column(name = "memoria_ram")
-    private String memoria_ram;
+    @Column(name = "descricao_problema")
+    private String descricao_problema;
 
     @Column(name = "produto_extra")
     private String produto_extra;
 
-    @Column(name ="detalhes_do_servico")
-    private String detalhes_do_servico;
+    @Column(name ="relatorio_tecnico")
+    private String relatorio_tecnico;
 
     @Column(name = "custo_total")
     private BigDecimal custo_total;

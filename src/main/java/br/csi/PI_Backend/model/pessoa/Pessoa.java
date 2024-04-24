@@ -45,9 +45,4 @@ public class Pessoa {
     @Size(min = 10, max =11, message = "CPF inválido")
     @Column(name = "cpf")
     private String cpf;
-
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Column(name = "data_nascimento")
-    private Date data_Nascimento;
 }
