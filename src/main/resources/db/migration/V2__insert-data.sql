@@ -160,12 +160,6 @@ VALUES ('ADMIN'),
        ('TECNICO'),
        ('ATENDENTE');
 
--- Funcionários
-INSERT INTO funcionarios (pessoa_id, cargo_id, login, senha, ativo)
-VALUES (1, 1, 'admin', '123', true),
-       (2, 3, 'maria_oliveira', 'password', true),
-       (3, 2, 'carlos_souza', 'secret', true),
-       (4, 2, 'ana_santos', 'abcdef', true);
 
 -- Status
 INSERT INTO status (nome)
@@ -179,14 +173,3 @@ VALUES ('Manutenção', 'Manutenção preventiva', 100.00),
        ('Instalação', 'Instalação de software', 50.00),
        ('Reparo', 'Reparo de hardware', 80.00);
 
--- Ordens de Serviço
-INSERT INTO ordens_de_servico (pessoa_id, funcionario_id, tipo_de_servico_id, status_id, descricao_problema,
-                               produto_extra, custo_total, relatorio_tecnico, data_criacao, data_previsao, data_entrega)
-VALUES (1, 3, 1, 1, 'Computador não liga', NULL, 100.00, 'Troca de fonte realizada', '2024-04-22 10:00:00',
-        '2024-04-22', '2024-04-22'),
-       (2, 4, 2, 1, 'Problema na inicialização do sistema', NULL, 50.00, 'Reinstalação do sistema operacional',
-        '2024-04-22 11:00:00', '2024-04-22', '2024-04-22'),
-       (3, 3, 3, 2, 'Teclado não funciona', NULL, 80.00, 'Substituição do teclado realizada', '2024-04-22 12:00:00',
-        '2024-04-22', '2024-04-23'),
-       (4, 4, 1, 3, 'Problema na conexão de rede', 'Cabo de rede', 110.00,
-        'Verificação de cabeamento realizada. Cliente desistiu do serviço.', '2024-04-22 13:00:00', '2024-04-22', NULL);

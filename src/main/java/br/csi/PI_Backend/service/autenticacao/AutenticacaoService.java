@@ -24,7 +24,7 @@ public class AutenticacaoService implements UserDetailsService {
         } else {
             UserDetails user = User.withUsername(funcionario.getLogin())
                     .password(funcionario.getSenha())
-                    .authorities(funcionario.getCargoString())
+                    .authorities(funcionario.getCargo().getNome())
                     .build();
             return user;
         }

@@ -44,12 +44,12 @@ public class CidadeService {
     public Cidade getOrCreateCidade(String nome, String estado) {
         Optional<Cidade> existingCidade = Optional.ofNullable(this.repository.findByNomeAndEstadoNome(nome, estado));
         if (existingCidade.isPresent()) {
-            return existingCidade.get(); // Return the existing Cidade if found
+            return existingCidade.get();
         } else {
             Cidade newCidade = new Cidade();
             newCidade.setNome(nome);
             newCidade.setEstado(estadoRepository.getEstadoByNome(estado));
-            return this.repository.save(newCidade); // Create and return a new Cidade
+            return this.repository.save(newCidade);
         }
     }
 }

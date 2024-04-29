@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
-
-                                .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST,"/cadastrar").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/funcionario").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").hasAuthority("ADMIN")
 
 

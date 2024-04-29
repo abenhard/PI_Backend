@@ -53,6 +53,7 @@ public class PessoaService {
     public Pessoa findByCpf(String id){
         return this.repository.getPessoaByCpf(id);
     }
+    public Pessoa getById(Long id){ return this.repository.getById(id);}
     public List<Pessoa> getAllPessoa(){
         return this.repository.findAll();
     }

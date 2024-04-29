@@ -1,28 +1,54 @@
 package br.csi.PI_Backend.service.funcionario;
 
-import br.csi.PI_Backend.model.funcionario.CargoRepository;
-import br.csi.PI_Backend.model.funcionario.DadosFuncionario;
-import br.csi.PI_Backend.model.funcionario.Funcionario;
-import br.csi.PI_Backend.model.funcionario.FuncionarioRepository;
+import br.csi.PI_Backend.model.funcionario.*;
 import br.csi.PI_Backend.model.pessoa.DadosPessoa;
 import br.csi.PI_Backend.model.pessoa.Pessoa;
 import br.csi.PI_Backend.service.pessoa.PessoaService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FuncionarioService {
     private final FuncionarioRepository repository;
-    private final CargoRepository cargoRepository;
+    private final CargoService cargoService;
     private final PessoaService pessoaService;
 
-    public FuncionarioService(FuncionarioRepository repository, PessoaService pessoaService, CargoRepository cargoRepository) {
+    public FuncionarioService(FuncionarioRepository repository, PessoaService pessoaService, CargoService cargoService) {
         this.repository = repository;
         this.pessoaService =pessoaService;
-        this.cargoRepository= cargoRepository;
+        this.cargoService = cargoService;
     }
 
     public Funcionario findByLogin(String login){ return this.repository.findByLogin(login);}
 
+    public List<Funcionario> findAllFuncionarios(){
+
+        return this.repository.findAll();
+
+    }
+    public Boolean Cadastrar(FuncionarioCadastro funcionario){
+        Pessoa pessoa = pessoaService.getById(funcionario.pessoa_id());
+        Cargo cargo = cargoService.getById(funcionario.cargo_id());
+        System.out.println(pessoa.getNome());
+        Funcionario funcionarioCadastrar = new Funcionario(
+                pessoa,
+               cargo,
+                funcionario.login(),
+                funcionario.senha(),
+                funcionario.ativo()
+        );
+
+
+
+        try {
+            this.repository.save(funcionarioCadastrar);
+            return true;
+        }catch (Exception e){
+            System.out.println("error: " + e);
+            return false;
+        }
+    }
     public Boolean Cadastrar(DadosFuncionario dadosFuncionario){
         Funcionario funcionario = new Funcionario();
         Pessoa pessoa = pessoaService.findByCpf(dadosFuncionario.cpf());
@@ -36,12 +62,9 @@ public class FuncionarioService {
 
             pessoa = pessoaService.Cadastrar(dadosPessoa);
         }
-
-        funcionario.setLogin(dadosFuncionario.login());
-        funcionario.setSenha(dadosFuncionario.senha());
         funcionario.setPessoa(pessoa);
         funcionario.setAtivo(true);
-        funcionario.setCargo(cargoRepository.findByNome(dadosFuncionario.cargo()));
+        funcionario.setCargo(cargoService.findByNome(dadosFuncionario.cargo()));
 
         try {
             this.repository.save(funcionario);
@@ -55,10 +78,10 @@ public class FuncionarioService {
     {
         Funcionario funcionario = findByLogin(dadosFuncionario.cpf());
 
-        funcionario.setLogin(dadosFuncionario.login());
-        funcionario.setSenha(dadosFuncionario.senha());
+        //funcionario.setLogin(dadosFuncionario.login());
+        //funcionario.setSenha(dadosFuncionario.senha());
         funcionario.setAtivo(true);
-        funcionario.setCargo(cargoRepository.findByNome(dadosFuncionario.cargo()));
+        funcionario.setCargo(cargoService.findByNome(dadosFuncionario.cargo()));
 
         try {
             this.repository.save(funcionario);
@@ -66,16 +89,16 @@ public class FuncionarioService {
             System.out.println("error: " + e);
         }
     }
-    public void Excluir(DadosFuncionario dadosFuncionario)
-    {
-        Funcionario funcionario = findByLogin(dadosFuncionario.login());
-
-        funcionario.setAtivo(false);
-
-        try {
-            this.repository.save(funcionario);
-        }catch (Exception e){
-            System.out.println("error: " + e);
-        }
-    }
+//    public void Excluir(DadosFuncionario dadosFuncionario)
+//    {
+//        //Funcionario funcionario = findByLogin(dadosFuncionario.login());
+//
+//        funcionario.setAtivo(false);
+//
+//        try {
+//            this.repository.save(funcionario);
+//        }catch (Exception e){
+//            System.out.println("error: " + e);
+//        }
+//    }
 }
