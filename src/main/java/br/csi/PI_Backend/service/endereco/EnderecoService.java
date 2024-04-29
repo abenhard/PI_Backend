@@ -13,18 +13,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnderecoService {
     private final EnderecoRepository repository;
-    private final PessoaService pessoaService;
+
     private final CidadeService cidadeService;
     private final UFService ufService;
 
-    public EnderecoService(EnderecoRepository repository, CidadeService cidadeService, UFService ufRepository, PessoaService pessoaService) {
+    public EnderecoService(EnderecoRepository repository, CidadeService cidadeService, UFService ufRepository) {
         this.repository = repository;
         this.cidadeService = cidadeService;
         this.ufService = ufRepository;
-        this.pessoaService = pessoaService;
     }
 
-    public void cadastrar(EnderecoDTO enderecoDTO, String cpf) {
+    public boolean cadastrar(EnderecoDTO enderecoDTO, Pessoa pessoa) {
+        if(pessoa == null)
+        {
+            System.out.println("Pessoa Não Cadastrada");
+            return false;
+        }
+
         Endereco enderecoSalvar = new Endereco();
         enderecoSalvar.setRua(enderecoDTO.getRua());
         enderecoSalvar.setBairro(enderecoDTO.getBairro());
@@ -33,23 +38,13 @@ public class EnderecoService {
         enderecoSalvar.setNumero(enderecoDTO.getNumero());
 
 
-        Estado estado = ufService.getUfPorNome(enderecoDTO.getUf());
+        Estado estado = ufService.getUfPorNome(enderecoDTO.getEstado());
         enderecoSalvar.setCidade(cidadeService.getOrCreateCidade(enderecoDTO.getCidade(), estado.getNome()));
-
-        Pessoa pessoa = pessoaService.findByCpf(cpf);
         enderecoSalvar.setPessoa(pessoa);
 
         this.repository.save(enderecoSalvar);
-
+        return true;
     }
-
-    public EnderecoDTO listar(String cpf) {
-
-        Endereco endereco = this.repository.findByPessoa(this.pessoaService.findByCpf(cpf));
-
-        return convertToEnderecoDTO(endereco);
-    }
-
     public Endereco findById(Long id) {
         return this.repository.findById(id).get();
     }
@@ -60,23 +55,23 @@ public class EnderecoService {
 
     public void atualizar(Endereco endereco){
        Endereco enderecoCadastrar = this.repository.getReferenceById(endereco.getId());
-        enderecoCadastrar.setRua(endereco.getRua());
-        enderecoCadastrar.setBairro(endereco.getBairro());
-        enderecoCadastrar.setCep(endereco.getCep());
-        enderecoCadastrar.setComplemento(endereco.getComplemento());
-        enderecoCadastrar.setCidade(endereco.getCidade());
+       if(enderecoCadastrar != null) {
+           setEndereco(enderecoCadastrar);
+       }
+       else{
+           System.out.println("Endereço não encontrado");
+       }
     }
     public void excluir(Long id){
         this.repository.deleteById(id);
     }
 
-    public EnderecoDTO convertToEnderecoDTO(Endereco endereco)
-    {
-        EnderecoDTO enderecoDTO = new EnderecoDTO(
-                endereco.getRua(), endereco.getBairro(), endereco.getComplemento(),
-                endereco.getCep(), endereco.getNumero(), endereco.getCidade().getNome()
-                , endereco.getCidade().getEstado().getNome());
-
-        return enderecoDTO;
+    void setEndereco(Endereco endereco){
+        endereco.setRua(endereco.getRua());
+        endereco.setBairro(endereco.getBairro());
+        endereco.setCep(endereco.getCep());
+        endereco.setComplemento(endereco.getComplemento());
+        endereco.setCidade(endereco.getCidade());
     }
+
 }

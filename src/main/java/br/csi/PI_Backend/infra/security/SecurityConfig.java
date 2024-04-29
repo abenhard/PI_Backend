@@ -29,8 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/cadastrar").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/funcionario").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").permitAll()
 
 
                                 .requestMatchers(HttpMethod.GET, "/{id}/ordens").hasAnyAuthority("TECNICO", "ADMIN")

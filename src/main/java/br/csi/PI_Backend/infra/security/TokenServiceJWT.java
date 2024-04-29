@@ -15,9 +15,9 @@ import java.time.ZoneOffset;
 public class TokenServiceJWT {
     public String gerarToken(User user){
         try{
-            Algorithm algorithm = Algorithm.HMAC256("POO2");
+            Algorithm algorithm = Algorithm.HMAC256("PI");
             return JWT.create()
-                    .withIssuer("API Web Store")
+                    .withIssuer("API PI")
                     .withSubject(user.getUsername())
                     .withClaim("ROLE", user.getAuthorities().stream().toList().get(0).toString())
                     .withExpiresAt(dataExpiracao())
@@ -31,9 +31,9 @@ public class TokenServiceJWT {
     }
     public String getSubject(String token){
         try{
-            Algorithm algorithm = Algorithm.HMAC256("POO2");
+            Algorithm algorithm = Algorithm.HMAC256("PI");
             return JWT.require(algorithm)
-                    .withIssuer("API Web Store")
+                    .withIssuer("API PI")
                     .build()
                     .verify(token)
                     .getSubject();

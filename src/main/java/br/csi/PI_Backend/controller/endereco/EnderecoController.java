@@ -4,6 +4,7 @@ import br.csi.PI_Backend.infra.security.TokenServiceJWT;
 import br.csi.PI_Backend.model.endereco.Endereco;
 import br.csi.PI_Backend.model.endereco.EnderecoDTO;
 import br.csi.PI_Backend.service.endereco.EnderecoService;
+import br.csi.PI_Backend.service.pessoa.PessoaService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,8 +17,13 @@ import java.util.List;
 @RequestMapping("/endereco")
 public class EnderecoController {
     private final EnderecoService service;
+    private final PessoaService pessoaService;
     private final TokenServiceJWT tokenService;
-    public EnderecoController(EnderecoService service, TokenServiceJWT tokenService){this.service =service; this.tokenService = tokenService;}
+    public EnderecoController(EnderecoService service, TokenServiceJWT tokenService, PessoaService pessoaService){
+        this.service =service;
+        this.tokenService = tokenService;
+        this.pessoaService = pessoaService;
+    }
 
     @PostMapping("/print-json")
     public void printJSon(@RequestBody String json){System.out.println(json);}
@@ -35,7 +41,7 @@ public class EnderecoController {
             String token = request.getHeader("Authorization").replace("Bearer ", ""); // Extract token from the request header
             String login = tokenService.getSubject(token);
 
-            this.service.cadastrar(enderecosDto, login);
+            this.service.cadastrar(enderecosDto, pessoaService.getByEmail(login));
 
             return ResponseEntity.ok("Endereço cadastrado com Sucesso");
         }

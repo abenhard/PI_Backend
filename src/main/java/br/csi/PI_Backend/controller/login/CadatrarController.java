@@ -25,7 +25,7 @@ public class CadatrarController {
     {
 
 
-            if(this.service.findByLogin(funcionario.login())==null){
+            if(this.service.findByLogin(funcionario.funcionarioDTO().login())==null){
                this.service.Cadastrar(funcionario);
             }
 

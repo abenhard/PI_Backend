@@ -1,5 +1,6 @@
 package br.csi.PI_Backend;
 
+import br.csi.PI_Backend.service.funcionario.FuncionarioService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -45,4 +45,12 @@ public class Pessoa {
     @Size(min = 10, max =11, message = "CPF inválido")
     @Column(name = "cpf")
     private String cpf;
+
+    public Pessoa(String nome, String email, String telefone, String whatsApp, String cpf){
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+        this.whatsapp = whatsApp;
+        this.cpf = cpf;
+    }
 }

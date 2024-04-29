@@ -1,9 +1,10 @@
 package br.csi.PI_Backend.service.funcionario;
 
 import br.csi.PI_Backend.model.funcionario.*;
-import br.csi.PI_Backend.model.pessoa.DadosPessoa;
+import br.csi.PI_Backend.model.pessoa.PessoaDTO;
 import br.csi.PI_Backend.model.pessoa.Pessoa;
 import br.csi.PI_Backend.service.pessoa.PessoaService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,78 +28,82 @@ public class FuncionarioService {
         return this.repository.findAll();
 
     }
-    public Boolean Cadastrar(FuncionarioCadastro funcionario){
-        Pessoa pessoa = pessoaService.getById(funcionario.pessoa_id());
-        Cargo cargo = cargoService.getById(funcionario.cargo_id());
-        System.out.println(pessoa.getNome());
-        Funcionario funcionarioCadastrar = new Funcionario(
-                pessoa,
-               cargo,
-                funcionario.login(),
-                funcionario.senha(),
-                funcionario.ativo()
-        );
-
-
-
-        try {
-            this.repository.save(funcionarioCadastrar);
-            return true;
-        }catch (Exception e){
-            System.out.println("error: " + e);
-            return false;
-        }
-    }
-    public Boolean Cadastrar(DadosFuncionario dadosFuncionario){
-        Funcionario funcionario = new Funcionario();
-        Pessoa pessoa = pessoaService.findByCpf(dadosFuncionario.cpf());
-        if(pessoa == null){
-            DadosPessoa dadosPessoa = new DadosPessoa(
-                    dadosFuncionario.nome(),
-                    dadosFuncionario.email(),
-                    dadosFuncionario.telefone(),
-                    dadosFuncionario.whatsapp(),
-                    dadosFuncionario.cpf());
-
-            pessoa = pessoaService.Cadastrar(dadosPessoa);
-        }
-        funcionario.setPessoa(pessoa);
-        funcionario.setAtivo(true);
-        funcionario.setCargo(cargoService.findByNome(dadosFuncionario.cargo()));
-
-        try {
-            this.repository.save(funcionario);
-            return true;
-        }catch (Exception e){
-            System.out.println("error: " + e);
-            return false;
-        }
-    }
-    public void Alterar(DadosFuncionario dadosFuncionario)
-    {
-        Funcionario funcionario = findByLogin(dadosFuncionario.cpf());
-
-        //funcionario.setLogin(dadosFuncionario.login());
-        //funcionario.setSenha(dadosFuncionario.senha());
-        funcionario.setAtivo(true);
-        funcionario.setCargo(cargoService.findByNome(dadosFuncionario.cargo()));
-
-        try {
-            this.repository.save(funcionario);
-        }catch (Exception e){
-            System.out.println("error: " + e);
-        }
-    }
-//    public void Excluir(DadosFuncionario dadosFuncionario)
-//    {
-//        //Funcionario funcionario = findByLogin(dadosFuncionario.login());
+//    public Boolean Cadastrar(FuncionarioCadastro funcionario){
+//        Pessoa pessoa = pessoaService.getByCpf(funcionario.pessoaEnderecoDTO().getPessoaDTO().cpf()));
+//        Cargo cargo = cargoService.getById(funcionario.cargo_id());
+//        System.out.println(pessoa.getNome());
+//        Funcionario funcionarioCadastrar = new Funcionario(
+//                pessoa,
+//               cargo,
+//                funcionario.login(),
+//                funcionario.senha(),
+//                funcionario.ativo()
+//        );
 //
-//        funcionario.setAtivo(false);
+//
 //
 //        try {
-//            this.repository.save(funcionario);
+//            this.repository.save(funcionarioCadastrar);
+//            return true;
 //        }catch (Exception e){
 //            System.out.println("error: " + e);
+//            return false;
 //        }
 //    }
+    public Boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
+
+        Pessoa pessoa = pessoaService.getByCpf(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
+        if(pessoa == null){
+            PessoaDTO pessoaDTO = new PessoaDTO(
+                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().nome(),
+                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().email(),
+                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().telefone(),
+                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().whatsapp(),
+                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
+
+            pessoa = pessoaService.Cadastrar(pessoaDTO, funcionarioCadastro.pessoaEnderecoDTO().getEnderecoDTO());
+        }
+        Funcionario funcionario = new Funcionario();
+
+        funcionario.setPessoa(pessoa);
+        funcionario.setLogin(pessoa.getEmail());
+        funcionario.setSenha(new BCryptPasswordEncoder().encode(funcionarioCadastro.funcionarioDTO().senha()));
+        funcionario.setAtivo(true);
+        funcionario.setCargo(cargoService.findByNome(funcionarioCadastro.funcionarioDTO().cargo()));
+
+        try {
+            this.repository.save(funcionario);
+            return true;
+        }catch (Exception e){
+            System.out.println("error: " + e);
+            return false;
+        }
+    }
+    public void Alterar(FuncionarioDTO funcionarioDTO)
+    {
+        Funcionario funcionario = findByLogin(funcionarioDTO.login());
+
+        funcionario.setLogin(funcionarioDTO.login());
+        funcionario.setSenha(new BCryptPasswordEncoder().encode(funcionarioDTO.senha()));
+        funcionario.setAtivo(funcionarioDTO.ativo());
+        funcionario.setCargo(cargoService.findByNome(funcionarioDTO.cargo()));
+
+        try {
+            this.repository.save(funcionario);
+        }catch (Exception e){
+            System.out.println("error: " + e);
+        }
+    }
+    public void Excluir(FuncionarioDTO dadosFuncionario)
+    {
+        Funcionario funcionario = findByLogin(dadosFuncionario.login());
+
+        funcionario.setAtivo(false);
+
+        try {
+            this.repository.save(funcionario);
+        }catch (Exception e){
+            System.out.println("error: " + e);
+        }
+    }
 }
