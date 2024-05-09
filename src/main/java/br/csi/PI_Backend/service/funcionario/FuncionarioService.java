@@ -28,28 +28,6 @@ public class FuncionarioService {
         return this.repository.findAll();
 
     }
-//    public Boolean Cadastrar(FuncionarioCadastro funcionario){
-//        Pessoa pessoa = pessoaService.getByCpf(funcionario.pessoaEnderecoDTO().getPessoaDTO().cpf()));
-//        Cargo cargo = cargoService.getById(funcionario.cargo_id());
-//        System.out.println(pessoa.getNome());
-//        Funcionario funcionarioCadastrar = new Funcionario(
-//                pessoa,
-//               cargo,
-//                funcionario.login(),
-//                funcionario.senha(),
-//                funcionario.ativo()
-//        );
-//
-//
-//
-//        try {
-//            this.repository.save(funcionarioCadastrar);
-//            return true;
-//        }catch (Exception e){
-//            System.out.println("error: " + e);
-//            return false;
-//        }
-//    }
     public Boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
 
         Pessoa pessoa = pessoaService.getByCpf(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
