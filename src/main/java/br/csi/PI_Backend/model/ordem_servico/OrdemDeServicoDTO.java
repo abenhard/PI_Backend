@@ -12,22 +12,39 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class OrdemDeServicoDTO{
-    String cliente;
-    String funcionario;
-    String status;
-    String tipo_servico;
-    String descricao_problema;
-    String produto_extra;
-    String relatorio_tecnico;
-    BigDecimal custo_total;
-    Timestamp data_criacao;
-    Date data_previsao;
-    Date data_entrega;
-    String imagem_caminho;
-    String localizacao;
+    private Long id;
+    private String clienteCPF;
+    private String funcionario;
+    private String status;
+    private String tipo_servico;
+    private String descricao_problema;
+    private String produto_extra;
+    private String relatorio_tecnico;
+    private BigDecimal custo_total;
+    private Timestamp data_criacao;
+    private Date data_previsao;
+    private Date data_entrega;
+    private String imagem_caminho;
+    private String localizacao;
 
-    public OrdemDeServicoDTO(String cliente, String funcionario, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao, String imagem_caminho, String localizacao) {
-        this.cliente = cliente;
+    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
+        this.clienteCPF = clienteCPF;
+        this.funcionario = funcionario;
+        this.status = status;
+        this.tipo_servico = tipo_servico;
+        this.descricao_problema = descricao_problema;
+        this.produto_extra = produto_extra;
+        this.relatorio_tecnico = relatorio_tecnico;
+        this.custo_total = custo_total;
+        this.data_criacao = data_criacao;
+        this.data_previsao = data_previsao;
+        this.data_entrega = data_entrega;
+        this.imagem_caminho = imagem_caminho;
+        this.localizacao = localizacao;
+    }
+
+    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao, String imagem_caminho, String localizacao) {
+        this.clienteCPF = clienteCPF;
         this.funcionario = funcionario;
         this.tipo_servico = tipo_servico;
         this.status = status;

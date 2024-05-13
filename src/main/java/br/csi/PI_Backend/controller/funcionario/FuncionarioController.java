@@ -26,14 +26,13 @@ public class FuncionarioController {
     @PostMapping("/cadastrar")
     @Transactional
     public ResponseEntity<String> cadastrar(@Valid @RequestBody FuncionarioCadastro funcionarioCadastro, UriComponentsBuilder uriBuilder) {
-        System.out.println("tentou cadastrar");
-        // Check if the login already exists
+
         if (this.service.findByLogin(funcionarioCadastro.funcionarioDTO().login()) != null) {
             return ResponseEntity.badRequest().body("funcionario já cadastrado!!");
         } else {
-            // Perform the registration
+
             this.service.Cadastrar(funcionarioCadastro);
-            // Return a successful response
+
             return ResponseEntity.created(uriBuilder.path("/funcionario/{id}").buildAndExpand(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().nome()).toUri())
                     .body("funcionario cadastrado");
         }

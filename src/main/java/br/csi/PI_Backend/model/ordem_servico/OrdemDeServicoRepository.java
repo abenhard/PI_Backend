@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface OrdemDeServicoRepository extends JpaRepository<OrdemDeServico, Long> {
-
+    OrdemDeServico findById(long id);
     List<OrdemDeServico> findOrdemDeServicosByPessoaEqualsAndFuncionarioEquals(Pessoa pessoa, Funcionario funcionario);
     List<OrdemDeServico> findOrdemDeServicosByFuncionarioEquals(Funcionario funcionario);
     List<OrdemDeServico> findOrdemDeServicosByPessoaEquals(Pessoa pessoa);
