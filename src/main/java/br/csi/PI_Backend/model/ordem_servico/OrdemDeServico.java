@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrdemServico {
+public class OrdemDeServico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,15 +41,13 @@ public class OrdemServico {
 
     @NotNull
     @NotBlank
-    @OneToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "status_id")
-    private Status status;
+    @Column(name = "status")
+    private String status;
 
     @NotNull
     @NotBlank
-    @OneToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "tipo_de_servico_id")
-    private Tipo_Servico tipo_servico;
+    @Column(name = "tipo_de_servico")
+    private String tipo_servico;
 
     @NotNull
     @NotBlank
@@ -75,4 +73,32 @@ public class OrdemServico {
 
     @Column(name="data_entrega")
     private Date data_entrega;
+
+    @NotNull
+    @NotBlank
+    @Column(name = "imagem_caminho")
+    private String imagem_caminho;
+
+    @NotNull
+    @NotBlank
+    @Column(name = "localizacao")
+    private String localizacao;
+
+
+    public OrdemDeServico(Pessoa pessoa, Funcionario funcionario, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
+        this.pessoa = pessoa;
+        this.funcionario = funcionario;
+        this.status = status;
+        this.tipo_servico = tipo_servico;
+        this.descricao_problema = descricao_problema;
+        this.produto_extra = produto_extra;
+        this.relatorio_tecnico = relatorio_tecnico;
+        this.custo_total = custo_total;
+        this.data_criacao = data_criacao;
+        this.data_previsao = data_previsao;
+        this.data_entrega = data_entrega;
+        this.imagem_caminho = imagem_caminho;
+        this.localizacao = localizacao;
+    }
+
 }

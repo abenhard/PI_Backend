@@ -1,4 +1,4 @@
-package br.csi.PI_Backend.model.endereco;
+package br.csi.PI_Backend.model.pessoa;
 
 import lombok.Getter;
 import lombok.Setter;

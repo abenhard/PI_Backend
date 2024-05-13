@@ -20,6 +20,9 @@ public class FuncionarioService {
         this.pessoaService =pessoaService;
         this.cargoService = cargoService;
     }
+    public Funcionario getById(Long id){
+        return repository.getById(id);
+    }
 
     public Funcionario findByLogin(String login){ return this.repository.findByLogin(login);}
 
