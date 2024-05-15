@@ -24,14 +24,34 @@ public class OrdemDeServicoController {
         this.service = service;
         this.tokenService = tokenService;
     }
-    @PostMapping("/cadastrar")
+    @PostMapping("/cadastroPorAtendente")
+    @Transactional
+    public ResponseEntity<String> cadastrar(@Valid @RequestBody OrdemDeServicoDTO ordemDeServicoDTO,
+                                            UriComponentsBuilder uriBuilder)
+    {
+        System.out.println("tentou cadastrar Ordem De Serviço");
+
+        //*CADASTRO PEELO ATENDENTE*//
+        //*CADASTRO PEELO ATENDENTE*//
+
+        return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
+    }
+
+    @PostMapping("/cadastroPorTecnico")
     @Transactional
     public ResponseEntity<String> cadastrar( @Valid @RequestBody OrdemDeServicoDTO ordemDeServicoDTO,
                                              @RequestParam("photos") MultipartFile[] photos,
-                                             @RequestParam("localization") String localization,
-                                             UriComponentsBuilder uriBuilder) {
+                                             UriComponentsBuilder uriBuilder)
+    {
         System.out.println("tentou cadastrar Ordem De Serviço");
-
+        try {
+            this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, photos);
+            return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
+        }
+        catch (Exception e){
+            System.out.println("Error no cadastro de ordem por tecnico: " + e);
+            return ResponseEntity.badRequest().body("Ocorreu um problema com o cadastro da Ordem de serviço");
+        }
     }
     @GetMapping("/funcionario")
     public List<OrdemDeServicoDTO> getOrdemDoServicos(HttpServletRequest request){

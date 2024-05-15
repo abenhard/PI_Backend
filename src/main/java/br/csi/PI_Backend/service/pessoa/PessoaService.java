@@ -19,8 +19,9 @@ public class PessoaService {
 
     public Pessoa Cadastrar(PessoaDTO pessoaDTO, EnderecoDTO enderecoDTO){
 
-        Pessoa pessoaCadastrar = new Pessoa(pessoaDTO.nome(), pessoaDTO.email(),
-                pessoaDTO.telefone(), pessoaDTO.whatsapp(),
+        Pessoa pessoaCadastrar = new Pessoa(
+                pessoaDTO.nome(), pessoaDTO.telefone(),
+                pessoaDTO.email(),pessoaDTO.whatsapp(),
                 pessoaDTO.cpf(),enderecoDTO.getComplemento(),
                 enderecoDTO.getRua(), enderecoDTO.getBairro(),
                 enderecoDTO.getCep(), enderecoDTO.getNumero(),

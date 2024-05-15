@@ -31,7 +31,10 @@ public class FuncionarioService {
         return this.repository.findAll();
 
     }
-    public Boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
+    public boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
+        if(findByLogin(funcionarioCadastro.funcionarioDTO().login())!= null){
+            return false;
+        }
 
         Pessoa pessoa = pessoaService.getByCpf(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
         if(pessoa == null){
@@ -55,6 +58,7 @@ public class FuncionarioService {
         try {
             this.repository.save(funcionario);
             return true;
+
         }catch (Exception e){
             System.out.println("error: " + e);
             return false;

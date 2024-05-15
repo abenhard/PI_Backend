@@ -31,7 +31,7 @@ public class OrdemDeServicoService {
         this.pessoaService = pessoaService;
         this.funcionarioService = funcionarioService;
     }
-    public boolean cadastrar(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos){
+    public boolean cadastrarOrdemTecnico(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos){
         if(!this.repository.findById(ordemDeServicoDTO.getId()).isPresent())
         {
             return false;

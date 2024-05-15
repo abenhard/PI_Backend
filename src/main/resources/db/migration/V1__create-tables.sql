@@ -12,7 +12,7 @@ create table pessoas(
     cep varchar(9) NOT NULL,
     numero varchar(15) NOT NULL,
     cidade varchar(100) NOT NULL,
-    estado varchar(100) NOT NULL,
+    estado varchar(100) NOT NULL
   );
 CREATE TABLE cargos(
     id serial not null primary key,
@@ -42,7 +42,7 @@ CREATE table ordens_de_servico(
     data_previsao date,
     data_entrega date,
     imagem_caminho VARCHAR(100),
-    localizacao VARCHAR(100)
+    localizacao VARCHAR(100),
     FOREIGN KEY (pessoa_id) REFERENCES pessoas(id),
     FOREIGN KEY (funcionario_id) REFERENCES funcionarios(id)
 );

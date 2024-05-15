@@ -53,4 +53,13 @@ public class OrdemDeServicoDTO{
         this.imagem_caminho = imagem_caminho;
         this.localizacao = localizacao;
     }
+
+    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao) {
+        this.clienteCPF = clienteCPF;
+        this.funcionario = funcionario;
+        this.status = status;
+        this.tipo_servico = tipo_servico;
+        this.descricao_problema = descricao_problema;
+        this.data_criacao = data_criacao;
+    }
 }

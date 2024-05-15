@@ -27,7 +27,7 @@ public class FuncionarioController {
     @Transactional
     public ResponseEntity<String> cadastrar(@Valid @RequestBody FuncionarioCadastro funcionarioCadastro, UriComponentsBuilder uriBuilder) {
 
-        if (this.service.findByLogin(funcionarioCadastro.funcionarioDTO().login()) != null) {
+        if (this.service.findByLogin(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().email()) != null) {
             return ResponseEntity.badRequest().body("funcionario já cadastrado!!");
         } else {
 
