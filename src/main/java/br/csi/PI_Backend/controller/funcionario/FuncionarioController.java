@@ -37,7 +37,10 @@ public class FuncionarioController {
                     .body("funcionario cadastrado");
         }
     }
-
+    @GetMapping("/tecnicos")
+    public List<Funcionario> getTecnicos(HttpServletRequest request){
+        return  this.service.findTecnicos();
+    }
     @GetMapping
     public List<Funcionario> getFuncionarios(HttpServletRequest request){
 //        String token = request.getHeader("Authorization").replace("Bearer", "");

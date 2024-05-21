@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -24,28 +23,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
-                .csrf(crsf-> crsf.disable())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth->
+                .authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/cadastrar").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/funcionario/tecnicos").hasAnyAuthority("ADMIN", "ATENDENTE")
                                 .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/ordem/funcionario/{login}").hasAuthority("TECNICO")
 
-
-                                .requestMatchers(HttpMethod.GET, "/{id}/ordens").hasAnyAuthority("TECNICO", "ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorAtendente").hasAnyAuthority("ADMIN", "ATENDENTE")
+                                .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorTecnico").hasAuthority("TECNICO")
 
                                 .anyRequest().authenticated())
                 .addFilterBefore(this.autenticacaoFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
+

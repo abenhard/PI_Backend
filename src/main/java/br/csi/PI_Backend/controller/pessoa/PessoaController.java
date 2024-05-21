@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/pessoa")
@@ -35,6 +37,10 @@ public class PessoaController {
         }
 
         return ResponseEntity.ok().body("Cliente cadastrado com sucesso");
+    }
+    @GetMapping
+    public List<Pessoa> getPessoas(){
+        return this.pessoaService.getAllPessoa();
     }
     @GetMapping("/{cpf}")
     public Pessoa CPF(@PathVariable String cpf){

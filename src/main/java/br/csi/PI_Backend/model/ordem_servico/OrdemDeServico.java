@@ -29,13 +29,13 @@ public class OrdemDeServico {
 
     @NotNull
     @NotBlank
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
     @NotNull
     @NotBlank
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
@@ -57,7 +57,7 @@ public class OrdemDeServico {
     @Column(name = "produto_extra")
     private String produto_extra;
 
-    @Column(name ="relatorio_tecnico")
+    @Column(name = "relatorio_tecnico")
     private String relatorio_tecnico;
 
     @Column(name = "custo_total")
@@ -65,13 +65,13 @@ public class OrdemDeServico {
 
     @NotNull
     @NotBlank
-    @Column(name= "data_criacao")
+    @Column(name = "data_criacao")
     private Timestamp data_criacao;
 
-    @Column(name="data_previsao")
+    @Column(name = "data_previsao")
     private Date data_previsao;
 
-    @Column(name="data_entrega")
+    @Column(name = "data_entrega")
     private Date data_entrega;
 
     @NotNull
@@ -85,7 +85,7 @@ public class OrdemDeServico {
     private String localizacao;
 
 
-    public OrdemDeServico(Pessoa pessoa, Funcionario funcionario, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
+    public OrdemDeServico(Pessoa pessoa, Funcionario funcionario, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, String imagem_caminho, String localizacao) {
         this.pessoa = pessoa;
         this.funcionario = funcionario;
         this.status = status;
@@ -96,9 +96,18 @@ public class OrdemDeServico {
         this.custo_total = custo_total;
         this.data_criacao = data_criacao;
         this.data_previsao = data_previsao;
-        this.data_entrega = data_entrega;
         this.imagem_caminho = imagem_caminho;
         this.localizacao = localizacao;
     }
 
+    public OrdemDeServico(Pessoa pessoa, Funcionario funcionario, String status, String tipo_servico, String descricao_problema) {
+        this.pessoa = pessoa;
+        this.funcionario = funcionario;
+        this.status = status;
+        this.tipo_servico = tipo_servico;
+        this.descricao_problema = descricao_problema;
+    }
+
 }
+
+

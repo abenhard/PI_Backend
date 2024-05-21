@@ -9,5 +9,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     public Funcionario getById(Long id);
     public Funcionario findByLogin(String login);
 
+    public List<Funcionario> findFuncionariosByCargoIs(Cargo cargo);
     public List<Funcionario> findAll();
 }

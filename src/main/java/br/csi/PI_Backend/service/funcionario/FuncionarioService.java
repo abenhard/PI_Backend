@@ -26,6 +26,10 @@ public class FuncionarioService {
 
     public Funcionario findByLogin(String login){ return this.repository.findByLogin(login);}
 
+    public List<Funcionario> findTecnicos(){
+        Cargo cargo = this.cargoService.findByNome("TECNICO");
+        return this.repository.findFuncionariosByCargoIs(cargo);
+    }
     public List<Funcionario> findAllFuncionarios(){
 
         return this.repository.findAll();

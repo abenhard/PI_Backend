@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class OrdemDeServicoDTO{
     private Long id;
     private String clienteCPF;
-    private String funcionario;
+    private String funcionarioLogin;
     private String status;
     private String tipo_servico;
     private String descricao_problema;
@@ -27,9 +27,9 @@ public class OrdemDeServicoDTO{
     private String imagem_caminho;
     private String localizacao;
 
-    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
+    public OrdemDeServicoDTO(String clienteCPF, String funcionarioLogin, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
         this.clienteCPF = clienteCPF;
-        this.funcionario = funcionario;
+        this.funcionarioLogin = funcionarioLogin;
         this.status = status;
         this.tipo_servico = tipo_servico;
         this.descricao_problema = descricao_problema;
@@ -43,9 +43,9 @@ public class OrdemDeServicoDTO{
         this.localizacao = localizacao;
     }
 
-    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao, String imagem_caminho, String localizacao) {
+    public OrdemDeServicoDTO(String clienteCPF, String funcionarioLogin, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao, String imagem_caminho, String localizacao) {
         this.clienteCPF = clienteCPF;
-        this.funcionario = funcionario;
+        this.funcionarioLogin = funcionarioLogin;
         this.tipo_servico = tipo_servico;
         this.status = status;
         this.descricao_problema = descricao_problema;
@@ -54,9 +54,9 @@ public class OrdemDeServicoDTO{
         this.localizacao = localizacao;
     }
 
-    public OrdemDeServicoDTO(String clienteCPF, String funcionario, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao) {
+    public OrdemDeServicoDTO(String clienteCPF, String funcionariologin, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao) {
         this.clienteCPF = clienteCPF;
-        this.funcionario = funcionario;
+        this.funcionarioLogin = funcionariologin;
         this.status = status;
         this.tipo_servico = tipo_servico;
         this.descricao_problema = descricao_problema;

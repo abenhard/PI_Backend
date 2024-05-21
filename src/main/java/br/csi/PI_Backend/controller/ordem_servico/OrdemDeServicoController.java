@@ -1,8 +1,9 @@
 package br.csi.PI_Backend.controller.ordem_servico;
 
 import br.csi.PI_Backend.infra.security.TokenServiceJWT;
-import br.csi.PI_Backend.model.funcionario.FuncionarioCadastro;
+import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoAtendenteDTO;
 import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoDTO;
+import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoTecnicoDTO;
 import br.csi.PI_Backend.service.ordem_servico.OrdemDeServicoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -18,48 +19,51 @@ import java.util.List;
 @RequestMapping("ordem")
 public class OrdemDeServicoController {
     private final OrdemDeServicoService service;
-    private TokenServiceJWT tokenService;
+    private final TokenServiceJWT tokenService;
 
     public OrdemDeServicoController(OrdemDeServicoService service, TokenServiceJWT tokenService) {
         this.service = service;
         this.tokenService = tokenService;
     }
+
     @PostMapping("/cadastroPorAtendente")
     @Transactional
-    public ResponseEntity<String> cadastrar(@Valid @RequestBody OrdemDeServicoDTO ordemDeServicoDTO,
-                                            UriComponentsBuilder uriBuilder)
-    {
-        System.out.println("tentou cadastrar Ordem De Serviço");
-
-        //*CADASTRO PEELO ATENDENTE*//
-        //*CADASTRO PEELO ATENDENTE*//
-
-        return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
+    public ResponseEntity<String> cadastrar(@RequestBody OrdemDeServicoAtendenteDTO ordemDeServicoDTO,
+                                            UriComponentsBuilder uriBuilder) {
+        if (this.service.cadastrarOrdemAtendente(ordemDeServicoDTO)) {
+            return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
+        }
+        return ResponseEntity.badRequest().body("Erro ao cadastrar Ordem de serviço");
     }
 
     @PostMapping("/cadastroPorTecnico")
     @Transactional
-    public ResponseEntity<String> cadastrar( @Valid @RequestBody OrdemDeServicoDTO ordemDeServicoDTO,
-                                             @RequestParam("photos") MultipartFile[] photos,
-                                             UriComponentsBuilder uriBuilder)
-    {
-        System.out.println("tentou cadastrar Ordem De Serviço");
+    public ResponseEntity<String> cadastrar(@Valid OrdemDeServicoTecnicoDTO ordemDeServicoDTO,
+                                            @RequestParam("fotos") MultipartFile[] fotos,
+                                            UriComponentsBuilder uriBuilder) {
         try {
-            this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, photos);
+            this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, fotos);
             return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
-        }
-        catch (Exception e){
-            System.out.println("Error no cadastro de ordem por tecnico: " + e);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ocorreu um problema com o cadastro da Ordem de serviço");
         }
     }
-    @GetMapping("/funcionario")
-    public List<OrdemDeServicoDTO> getOrdemDoServicos(HttpServletRequest request){
-       String token = request.getHeader("Authorization").replace("Bearer", "");
-       String login = tokenService.getSubject(token);
 
-
-       return service.findOrdemDeServicosByFuncionarioEquals(login);
+    @GetMapping("/funcionario/tecnico")
+    public ResponseEntity<List<OrdemDeServicoDTO>> getOrdemDeServicosByToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
+        try {
+            String login = tokenService.getSubject(token);
+            List<OrdemDeServicoDTO> ordens = service.findOrdemDeServicosByFuncionarioEquals(login);
+            return ResponseEntity.ok(ordens);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
     }
 
+
+    @GetMapping("/funcionario/{login}")
+    public List<OrdemDeServicoDTO> getOrdemDoServicos(@PathVariable String login) {
+        return service.findOrdemDeServicosByFuncionarioEquals(login);
+    }
 }
