@@ -56,18 +56,18 @@ public class OrdemDeServicoService {
         String caminhoImagens = "src/main/resources/imagens/" + orderFolderName + "/";
 
         OrdemDeServico ordemDeServico = new OrdemDeServico(
-                pessoaService.getByCpf(ordemDeServicoDTO.clienteCPF()),
-                funcionarioService.findByLogin(ordemDeServicoDTO.funcionariologin()),
-                ordemDeServicoDTO.status(),
-                ordemDeServicoDTO.tipo_servico(),
-                ordemDeServicoDTO.descricao_problema(),
-                ordemDeServicoDTO.produto_extra(),
-                ordemDeServicoDTO.relatorio_tecnico(),
+                pessoaService.getByCpf(ordemDeServicoDTO.getClienteCPF()),
+                funcionarioService.findByLogin(ordemDeServicoDTO.getFuncionariologin()),
+                ordemDeServicoDTO.getStatus(),
+                ordemDeServicoDTO.getTipo_servico(),
+                ordemDeServicoDTO.getDescricao_problema(),
+                ordemDeServicoDTO.getProduto_extra(),
+                ordemDeServicoDTO.getRelatorio_tecnico(),
                 null,
                 Timestamp.from(Instant.now()),
-                ordemDeServicoDTO.data_previsao(),
+                ordemDeServicoDTO.getData_previsao(),
                 caminhoImagens,
-                ordemDeServicoDTO.localizacao()
+                ordemDeServicoDTO.getLocalizacao()
         );
 
         salvaFotos(fotos, ordemDeServico);
@@ -101,7 +101,7 @@ public class OrdemDeServicoService {
         return setDTOS(ordemDeServicos);
     }
 
-    public List<OrdemDeServicoDTO> findOrdemDeServicosByFuncionarioEquals(String login) {
+    public List<OrdemDeServicoDTO> findOrdensDeServicoByFuncionarioEquals(String login) {
         Funcionario funcionario = funcionarioService.findByLogin(login);
         List<OrdemDeServico> ordemDeServicos = repository.findOrdemDeServicosByFuncionarioEquals(funcionario);
         return setDTOS(ordemDeServicos);

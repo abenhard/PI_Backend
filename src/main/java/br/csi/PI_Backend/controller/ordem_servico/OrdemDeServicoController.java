@@ -40,8 +40,13 @@ public class OrdemDeServicoController {
     @Transactional
     public ResponseEntity<String> cadastrar(@Valid OrdemDeServicoTecnicoDTO ordemDeServicoDTO,
                                             @RequestParam("fotos") MultipartFile[] fotos,
-                                            UriComponentsBuilder uriBuilder) {
+                                            HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
+
         try {
+            String login = tokenService.getSubject(token);
+            ordemDeServicoDTO.setFuncionariologin(login);
+            System.out.println("Cadastro tecnico:" + login);
             this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, fotos);
             return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
         } catch (Exception e) {
@@ -54,7 +59,7 @@ public class OrdemDeServicoController {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
         try {
             String login = tokenService.getSubject(token);
-            List<OrdemDeServicoDTO> ordens = service.findOrdemDeServicosByFuncionarioEquals(login);
+            List<OrdemDeServicoDTO> ordens = service.findOrdensDeServicoByFuncionarioEquals(login);
             return ResponseEntity.ok(ordens);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).build(); // Unauthorized
@@ -64,6 +69,6 @@ public class OrdemDeServicoController {
 
     @GetMapping("/funcionario/{login}")
     public List<OrdemDeServicoDTO> getOrdemDoServicos(@PathVariable String login) {
-        return service.findOrdemDeServicosByFuncionarioEquals(login);
+        return service.findOrdensDeServicoByFuncionarioEquals(login);
     }
 }

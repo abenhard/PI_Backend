@@ -29,7 +29,7 @@ public class PessoaController {
     public ResponseEntity Cadastrar(@RequestBody @Valid PessoaEnderecoDTO pessoaCadastro)
     {
 
-        if(this.pessoaService.getByCpf(pessoaCadastro.getPessoaDTO().cpf()) != null){
+        if(this.pessoaService.findByCpfOrNome(pessoaCadastro.getPessoaDTO().cpf()) != null){
             return ResponseEntity.badRequest().body("Cliente já cadastrado!!");
         }
         else {
@@ -42,8 +42,10 @@ public class PessoaController {
     public List<Pessoa> getPessoas(){
         return this.pessoaService.getAllPessoa();
     }
-    @GetMapping("/{cpf}")
-    public Pessoa CPF(@PathVariable String cpf){
-        return this.pessoaService.getByCpf(cpf);
+    @GetMapping("/{cpfOrLogin}")
+    public List<Pessoa> getPessoaByCpfOrLogin(@PathVariable String cpfOrLogin) {
+        System.out.println("Buscando Cliente : " + cpfOrLogin);
+        return this.pessoaService.findByCpfOrNome(cpfOrLogin);
     }
+
 }
