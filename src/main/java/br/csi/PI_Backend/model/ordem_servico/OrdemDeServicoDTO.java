@@ -27,39 +27,15 @@ public class OrdemDeServicoDTO{
     private String imagem_caminho;
     private String localizacao;
 
-    public OrdemDeServicoDTO(String clienteCPF, String funcionarioLogin, String status, String tipo_servico, String descricao_problema, String produto_extra, String relatorio_tecnico, BigDecimal custo_total, Timestamp data_criacao, Date data_previsao, Date data_entrega, String imagem_caminho, String localizacao) {
+    public OrdemDeServicoDTO(String clienteCPF, String funcionarioLogin, String status, String tipo_servico, String descricao_problema, String relatorio_tecnico, String produto_extra, Date data_previsao, String localizacao) {
         this.clienteCPF = clienteCPF;
         this.funcionarioLogin = funcionarioLogin;
         this.status = status;
         this.tipo_servico = tipo_servico;
         this.descricao_problema = descricao_problema;
-        this.produto_extra = produto_extra;
         this.relatorio_tecnico = relatorio_tecnico;
-        this.custo_total = custo_total;
-        this.data_criacao = data_criacao;
+        this.produto_extra = produto_extra;
         this.data_previsao = data_previsao;
-        this.data_entrega = data_entrega;
-        this.imagem_caminho = imagem_caminho;
         this.localizacao = localizacao;
-    }
-
-    public OrdemDeServicoDTO(String clienteCPF, String funcionarioLogin, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao, String imagem_caminho, String localizacao) {
-        this.clienteCPF = clienteCPF;
-        this.funcionarioLogin = funcionarioLogin;
-        this.tipo_servico = tipo_servico;
-        this.status = status;
-        this.descricao_problema = descricao_problema;
-        this.data_criacao = data_criacao;
-        this.imagem_caminho = imagem_caminho;
-        this.localizacao = localizacao;
-    }
-
-    public OrdemDeServicoDTO(String clienteCPF, String funcionariologin, String status, String tipo_servico, String descricao_problema, Timestamp data_criacao) {
-        this.clienteCPF = clienteCPF;
-        this.funcionarioLogin = funcionariologin;
-        this.status = status;
-        this.tipo_servico = tipo_servico;
-        this.descricao_problema = descricao_problema;
-        this.data_criacao = data_criacao;
     }
 }

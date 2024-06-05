@@ -1,9 +1,8 @@
 package br.csi.PI_Backend.controller.ordem_servico;
 
 import br.csi.PI_Backend.infra.security.TokenServiceJWT;
-import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoAtendenteDTO;
-import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoDTO;
-import br.csi.PI_Backend.model.ordem_servico.OrdemDeServicoTecnicoDTO;
+import br.csi.PI_Backend.model.ordem_servico.*;
+import br.csi.PI_Backend.service.ordem_servico.ImageService;
 import br.csi.PI_Backend.service.ordem_servico.OrdemDeServicoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -13,16 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("ordem")
 public class OrdemDeServicoController {
     private final OrdemDeServicoService service;
+    private final ImageService imageService;
     private final TokenServiceJWT tokenService;
 
-    public OrdemDeServicoController(OrdemDeServicoService service, TokenServiceJWT tokenService) {
+    public OrdemDeServicoController(OrdemDeServicoService service, ImageService imageService, TokenServiceJWT tokenService) {
         this.service = service;
+        this.imageService = imageService;
         this.tokenService = tokenService;
     }
 
@@ -38,14 +40,14 @@ public class OrdemDeServicoController {
 
     @PostMapping("/cadastroPorTecnico")
     @Transactional
-    public ResponseEntity<String> cadastrar(@Valid OrdemDeServicoTecnicoDTO ordemDeServicoDTO,
+    public ResponseEntity<String> cadastrar(@Valid OrdemDeServicoDTO ordemDeServicoDTO,
                                             @RequestParam("fotos") MultipartFile[] fotos,
                                             HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
 
         try {
             String login = tokenService.getSubject(token);
-            ordemDeServicoDTO.setFuncionariologin(login);
+            ordemDeServicoDTO.setFuncionarioLogin(login);
             System.out.println("Cadastro tecnico:" + login);
             this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, fotos);
             return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
@@ -54,21 +56,54 @@ public class OrdemDeServicoController {
         }
     }
 
+    @PostMapping("/alterarOrdem")
+    @Transactional
+    public ResponseEntity<String> alterar(@Valid OrdemDeServicoDTO ordemDeServicoDTO,
+                                            @RequestParam("fotos") MultipartFile[] fotos,
+                                            HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
+
+        try {
+            this.service.alterar(ordemDeServicoDTO, fotos);
+            return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ocorreu um problema com o cadastro da Ordem de serviço");
+        }
+    }
+    @GetMapping
+    public ResponseEntity<List<OrdemDeServicoExibicaoDTO>> getOrdensDeServico(HttpServletRequest request){
+            return ResponseEntity.ok(service.getOrdensDeServico());
+    }
     @GetMapping("/funcionario/tecnico")
-    public ResponseEntity<List<OrdemDeServicoDTO>> getOrdemDeServicosByToken(HttpServletRequest request) {
+    public ResponseEntity<List<OrdemDeServicoExibicaoDTO>> getOrdemDeServicos(HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
         try {
             String login = tokenService.getSubject(token);
-            List<OrdemDeServicoDTO> ordens = service.findOrdensDeServicoByFuncionarioEquals(login);
+            List<OrdemDeServicoExibicaoDTO> ordens = service.getOrdensDeServicoByFuncionarioEquals(login);
             return ResponseEntity.ok(ordens);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).build(); // Unauthorized
         }
     }
+    @PostMapping("/{orderId}/images")
+    public ResponseEntity<Void> uploadImages(@PathVariable Long orderId, @RequestParam("files") MultipartFile[] files) throws IOException {
+        imageService.uploadImages(orderId, files);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/{orderId}/images")
+    public ResponseEntity<List<String>> getOrderImages(@PathVariable Long orderId) {
+        List<String> imageUrls = imageService.getImageUrls(orderId);
+        return ResponseEntity.ok(imageUrls);
+    }
 
+    @DeleteMapping("/images")
+    public ResponseEntity<Void> deleteImage(@RequestParam String imageUrl) throws IOException {
+        imageService.deleteImage(imageUrl);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/funcionario/{login}")
-    public List<OrdemDeServicoDTO> getOrdemDoServicos(@PathVariable String login) {
-        return service.findOrdensDeServicoByFuncionarioEquals(login);
+    public List<OrdemDeServicoExibicaoDTO> getOrdemDoServicos(@PathVariable String login) {
+        return service.getOrdensDeServicoByFuncionarioEquals(login);
     }
 }

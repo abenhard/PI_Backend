@@ -33,10 +33,14 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/funcionario/tecnicos").hasAnyAuthority("ADMIN", "ATENDENTE")
                                 .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/ordem/funcionario/{login}").hasAuthority("TECNICO")
 
+                                .requestMatchers(HttpMethod.GET, "/ordem").hasAnyAuthority("ADMIN","ATENDENTE")
+                                .requestMatchers(HttpMethod.GET, "/ordem/funcionario/{login}").hasAuthority("TECNICO")
+                                .requestMatchers(HttpMethod.GET, "/ordem/{orderId}/images").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
                                 .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorAtendente").hasAnyAuthority("ADMIN", "ATENDENTE")
                                 .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorTecnico").hasAuthority("TECNICO")
+
+                                .requestMatchers(HttpMethod.POST, "/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
 
                                 .anyRequest().authenticated())
                 .addFilterBefore(this.autenticacaoFilter, UsernamePasswordAuthenticationFilter.class)

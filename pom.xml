@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.csi</groupId>
-	<artifactId>PO2_Trabalho</artifactId>
+	<artifactId>PI_Trabalho</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gg_store</name>
 	<description>Site de Ecommerce</description>

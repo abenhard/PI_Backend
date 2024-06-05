@@ -1,5 +1,5 @@
 version: '3'
-# docker-compose -p "PO2_Backend" up -d
+# docker-compose -p "/pi_backend" up -d
 services:
   PO2_Backend:
     image: po2_backend:latest
@@ -11,7 +11,7 @@ services:
     networks:
       - rede
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgresSQL:5432/PO2_Trabalho
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgresSQL:5432/pi_backend
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1234
   PostgresSQL:
@@ -21,7 +21,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=1234
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=PO2_Trabalho
+      - POSTGRES_DB=pi_backend
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
