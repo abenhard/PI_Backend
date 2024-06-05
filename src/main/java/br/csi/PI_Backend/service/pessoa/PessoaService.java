@@ -37,23 +37,25 @@ public class PessoaService {
             return pessoaCadastrar;
         }
     }
-    public Boolean Atualizar(PessoaDTO pessoaDTO, EnderecoDTO enderecoDTO){
-        Pessoa pessoaAtualizar = this.repository.getPessoaByCpf(pessoaDTO.cpf());
+    public Boolean Atualizar(Pessoa pessoa){
+        Pessoa pessoaAtualizar = this.repository.getById(pessoa.getId());
+        System.out.println("Pessoa enviada= " + pessoa.getNome());
         if(pessoaAtualizar==null)return false;
 
         try {
-            pessoaAtualizar.setNome(pessoaDTO.nome());
-            pessoaAtualizar.setTelefone(pessoaDTO.telefone());
-            pessoaAtualizar.setWhatsapp(pessoaDTO.whatsapp());
-            pessoaAtualizar.setCpf(pessoaDTO.cpf());
-            pessoaAtualizar.setRua(enderecoDTO.getRua());
-            pessoaAtualizar.setBairro(enderecoDTO.getBairro());
-            pessoaAtualizar.setComplemento(enderecoDTO.getComplemento());
-            pessoaAtualizar.setCep(enderecoDTO.getCep());
-            pessoaAtualizar.setNumero(enderecoDTO.getNumero());
-            pessoaAtualizar.setCidade(enderecoDTO.getCidade());
-            pessoaAtualizar.setEstado(enderecoDTO.getEstado());
+            pessoaAtualizar.setNome(pessoa.getNome());
+            pessoaAtualizar.setTelefone(pessoa.getTelefone());
+            pessoaAtualizar.setWhatsapp(pessoa.getWhatsapp());
+            pessoaAtualizar.setCpf(pessoa.getCpf());
+            pessoaAtualizar.setRua(pessoa.getRua());
+            pessoaAtualizar.setBairro(pessoa.getBairro());
+            pessoaAtualizar.setComplemento(pessoa.getComplemento());
+            pessoaAtualizar.setCep(pessoa.getCep());
+            pessoaAtualizar.setNumero(pessoa.getNumero());
+            pessoaAtualizar.setCidade(pessoa.getCidade());
+            pessoaAtualizar.setEstado(pessoa.getEstado());
 
+            this.repository.save(pessoaAtualizar);
             return true;
         }
         catch (Exception e){

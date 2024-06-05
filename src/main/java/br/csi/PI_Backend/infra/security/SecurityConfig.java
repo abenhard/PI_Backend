@@ -29,6 +29,7 @@ public class SecurityConfig {
                         auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/cadastrar").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/pessoa").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
+                                .requestMatchers(HttpMethod.PUT,"/pessoa").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
                                 .requestMatchers(HttpMethod.POST,"/pessoa/{cpfOrLogin}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
                                 .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/funcionario/tecnicos").hasAnyAuthority("ADMIN", "ATENDENTE")

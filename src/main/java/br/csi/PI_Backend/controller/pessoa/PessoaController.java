@@ -48,4 +48,21 @@ public class PessoaController {
         return this.pessoaService.findByCpfOrNome(cpfOrLogin);
     }
 
+    @PutMapping
+    public ResponseEntity updatePessoa(@Valid @RequestBody Pessoa pessoa){
+        System.out.println("Atualizando Cadastro");
+        if(this.pessoaService.Atualizar(pessoa)){
+            System.out.println("SUCESSO");
+            return ResponseEntity.ok("Cadastro Atualizado com sucesso");
+
+        }
+        else{
+            System.out.println("FALHOU");
+            return ResponseEntity.badRequest().body("Falha ao atualizado cadastro");
+
+        }
+
+    }
+
+
 }
