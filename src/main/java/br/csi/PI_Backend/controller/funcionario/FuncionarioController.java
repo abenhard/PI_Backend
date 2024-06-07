@@ -4,6 +4,7 @@ package br.csi.PI_Backend.controller.funcionario;
 import br.csi.PI_Backend.infra.security.TokenServiceJWT;
 import br.csi.PI_Backend.model.funcionario.Funcionario;
 import br.csi.PI_Backend.model.funcionario.FuncionarioCadastro;
+import br.csi.PI_Backend.model.funcionario.PessoaFuncionario;
 import br.csi.PI_Backend.service.funcionario.FuncionarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -42,9 +43,7 @@ public class FuncionarioController {
         return  this.service.findTecnicos();
     }
     @GetMapping
-    public List<Funcionario> getFuncionarios(HttpServletRequest request){
-//        String token = request.getHeader("Authorization").replace("Bearer", "");
-//        String login = tokenService.getSubject(token);
+    public List<PessoaFuncionario> getFuncionarios(){
         return  this.service.findAllFuncionarios();
     }
 }

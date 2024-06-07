@@ -7,6 +7,7 @@ import br.csi.PI_Backend.service.pessoa.PessoaService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,9 +31,22 @@ public class FuncionarioService {
         Cargo cargo = this.cargoService.findByNome("TECNICO");
         return this.repository.findFuncionariosByCargoIs(cargo);
     }
-    public List<Funcionario> findAllFuncionarios(){
+    public List<PessoaFuncionario> findAllFuncionarios(){
 
-        return this.repository.findAll();
+        List<Funcionario> funcionarios = this.repository.findAll();
+        List<PessoaFuncionario> pessoaFuncionarioList = new ArrayList<>();
+
+        for(Funcionario funcionario: funcionarios){
+            Pessoa pessoa = funcionario.getPessoa();
+
+            if(pessoa!=null){
+                PessoaFuncionario pessoaFuncionario = new PessoaFuncionario(pessoa, funcionario);
+                pessoaFuncionarioList.add(pessoaFuncionario);
+            }
+        }
+
+
+        return pessoaFuncionarioList;
 
     }
     public boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
