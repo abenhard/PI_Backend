@@ -18,7 +18,7 @@ import java.util.UUID;
 @Service
 public class ImageService {
 
-    private final String storagePath = "imagens"; // This should point to the folder inside src/main/resources
+    private final String storagePath = "upload/imagens";
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -32,13 +32,15 @@ public class ImageService {
         String imagePath = storagePath + "/" + folder + "/" + imageName;
         System.out.println("Image path: " + imagePath);
 
-        Resource resource = resourceLoader.getResource("classpath:" + imagePath);
-        if (resource.exists() || resource.isReadable()) {
+        Path path = Paths.get(imagePath);
+        if (Files.exists(path) && Files.isReadable(path)) {
+            Resource resource = resourceLoader.getResource("file:" + path.toString());
             return resource;
         } else {
             throw new FileNotFoundException("Image not found: " + imagePath);
         }
     }
+
 
     public void uploadImages(Long orderId, MultipartFile[] files) throws IOException {
         Path uploadPath = Paths.get(storagePath, orderId.toString());

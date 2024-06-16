@@ -41,7 +41,7 @@ public class OrdemDeServicoController {
     @PostMapping("/cadastroPorTecnico")
     @Transactional
     public ResponseEntity<String> cadastrar(@Valid OrdemDeServicoDTO ordemDeServicoDTO,
-                                            @RequestParam("fotos") MultipartFile[] fotos,
+                                            @RequestParam(value = "fotos", required = false) MultipartFile[] fotos,
                                             HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
 
@@ -52,28 +52,32 @@ public class OrdemDeServicoController {
             this.service.cadastrarOrdemTecnico(ordemDeServicoDTO, fotos);
             return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
         } catch (Exception e) {
+            e.printStackTrace();  // Log the stack trace for debugging
             return ResponseEntity.badRequest().body("Ocorreu um problema com o cadastro da Ordem de serviço");
         }
     }
 
-    @PostMapping("/alterarOrdem")
+    @PutMapping("/alterarOrdem")
     @Transactional
     public ResponseEntity<String> alterar(@Valid OrdemDeServicoDTO ordemDeServicoDTO,
-                                            @RequestParam("fotos") MultipartFile[] fotos,
-                                            HttpServletRequest request) {
+                                          @RequestParam(value = "fotos", required = false) MultipartFile[] fotos,
+                                          HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
 
         try {
             this.service.alterar(ordemDeServicoDTO, fotos);
             return ResponseEntity.ok().body("Ordem de serviço cadastrada com sucesso");
         } catch (Exception e) {
+            e.printStackTrace();  // Log the stack trace for debugging
             return ResponseEntity.badRequest().body("Ocorreu um problema com o cadastro da Ordem de serviço");
         }
     }
+
     @GetMapping
-    public ResponseEntity<List<OrdemDeServicoExibicaoDTO>> getOrdensDeServico(HttpServletRequest request){
-            return ResponseEntity.ok(service.getOrdensDeServico());
+    public ResponseEntity<List<OrdemDeServicoExibicaoDTO>> getOrdensDeServico(HttpServletRequest request) {
+        return ResponseEntity.ok(service.getOrdensDeServico());
     }
+
     @GetMapping("/funcionario/tecnico")
     public ResponseEntity<List<OrdemDeServicoExibicaoDTO>> getOrdemDeServicos(HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
@@ -82,9 +86,11 @@ public class OrdemDeServicoController {
             List<OrdemDeServicoExibicaoDTO> ordens = service.getOrdensDeServicoByFuncionarioEquals(login);
             return ResponseEntity.ok(ordens);
         } catch (RuntimeException e) {
+            e.printStackTrace();  // Log the stack trace for debugging
             return ResponseEntity.status(401).build(); // Unauthorized
         }
     }
+
     @PostMapping("/{orderId}/images")
     public ResponseEntity<Void> uploadImages(@PathVariable Long orderId, @RequestParam("files") MultipartFile[] files) throws IOException {
         imageService.uploadImages(orderId, files);
@@ -102,6 +108,7 @@ public class OrdemDeServicoController {
         imageService.deleteImage(imageUrl);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/funcionario/{login}")
     public List<OrdemDeServicoExibicaoDTO> getOrdemDoServicos(@PathVariable String login) {
         return service.getOrdensDeServicoByFuncionarioEquals(login);

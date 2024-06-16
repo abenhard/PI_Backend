@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 @RestController
-@RequestMapping("/imagens")
+@RequestMapping("upload/imagens")
 public class ImagemController {
     @Autowired
     private ImageService imageService;
@@ -36,11 +36,11 @@ public class ImagemController {
                 .body(resource);
     }
 
-    @GetMapping("/{orderId}/images")
-    public ResponseEntity<List<String>> getOrderImagesUrl(@PathVariable Long orderId) {
-        List<String> imageUrls = imageService.getImageUrls(orderId);
-        return ResponseEntity.ok(imageUrls);
-    }
+//    @GetMapping("/{orderId}/images")
+//    public ResponseEntity<List<String>> getOrderImagesUrl(@PathVariable Long orderId) {
+//        List<String> imageUrls = imageService.getImageUrls(orderId);
+//        return ResponseEntity.ok(imageUrls);
+//    }
 
     @DeleteMapping("/images")
     public ResponseEntity<Void> deleteImage(@RequestParam String imageUrl, @RequestHeader("Authorization") String token) throws IOException {

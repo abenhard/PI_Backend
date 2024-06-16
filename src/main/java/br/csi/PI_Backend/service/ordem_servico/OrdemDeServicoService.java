@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class OrdemDeServicoService {
 
     public boolean cadastrarOrdemAtendente(OrdemDeServicoAtendenteDTO ordemDeServicoDTO) {
         String orderFolderName = UUID.randomUUID().toString();
-        String caminhoImagens = "src/main/resources/imagens" + orderFolderName + "/";
+        String caminhoImagens = "upload/imagens/" + orderFolderName + "/";
 
         OrdemDeServico ordemDeServico = new OrdemDeServico(
                 pessoaService.getByCpf(ordemDeServicoDTO.clienteCPF()),
@@ -55,7 +56,7 @@ public class OrdemDeServicoService {
 
     public void cadastrarOrdemTecnico(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos) {
         String orderFolderName = UUID.randomUUID().toString();
-        String caminhoImagens = "src/main/resources/imagens/" + orderFolderName + "/";
+        String caminhoImagens = "upload/imagens/" + orderFolderName + "/";
 
         OrdemDeServico ordemDeServico = new OrdemDeServico(
                 pessoaService.getByCpf(ordemDeServicoDTO.getClienteCPF()),
@@ -71,13 +72,14 @@ public class OrdemDeServicoService {
                 caminhoImagens,
                 ordemDeServicoDTO.getLocalizacao()
         );
-
-        salvaFotos(fotos, ordemDeServico);
+        if(fotos != null && fotos.length >0){
+            salvaFotos(fotos, ordemDeServico);
+        }
         this.repository.save(ordemDeServico);
     }
 
 
-    public void alterar(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] photos) {
+    public void alterar(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos) {
         OrdemDeServico ordemDeServico = repository.findById(ordemDeServicoDTO.getId())
                 .orElseThrow(() -> new RecursoNotFoundException("Ordem de Servico não encontrada id :: " + ordemDeServicoDTO.getId()));
 
@@ -91,7 +93,9 @@ public class OrdemDeServicoService {
         ordemDeServico.setData_entrega(ordemDeServicoDTO.getData_entrega());
         ordemDeServico.setLocalizacao(ordemDeServicoDTO.getLocalizacao());
 
-        salvaFotos(photos, ordemDeServico);
+        if(fotos != null && fotos.length >0){
+            salvaFotos(fotos, ordemDeServico);
+        }
         this.repository.save(ordemDeServico);
     }
     public List<OrdemDeServicoExibicaoDTO> getOrdensDeServico(){
@@ -200,7 +204,7 @@ public class OrdemDeServicoService {
             if (files != null) {
                 for (File file : files) {
                     if (file.isFile()) {
-                        String imageUrl = BackEndUrl.getInstance().getBackendUrl() + "imagens/" + folder.getName() + "/" + file.getName();
+                        String imageUrl = BackEndUrl.getInstance().getBackendUrl() + "upload/imagens/" + folder.getName() + "/" + file.getName();
                         imageUrls.add(imageUrl);
                     }
                 }

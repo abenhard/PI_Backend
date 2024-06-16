@@ -3,14 +3,16 @@ package br.csi.PI_Backend.model.funcionario;
 import br.csi.PI_Backend.model.pessoa.Pessoa;
 import br.csi.PI_Backend.service.pessoa.PessoaService;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Entity
-@Table(name ="funcionarios")
+@Table(name ="funcionarios", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "login")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,7 +35,7 @@ public class Funcionario {
     private Cargo cargo;
 
     @NotBlank
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @NotBlank
@@ -45,10 +47,10 @@ public class Funcionario {
     private Boolean ativo;
 
     public Funcionario(Pessoa pessoa, Cargo cargo, String login, String senha, Boolean ativo) {
-       this.pessoa = pessoa;
-       this.cargo = cargo;
-       this.login = login;
-       this.senha = senha;
-       this.ativo = ativo;
+        this.pessoa = pessoa;
+        this.cargo = cargo;
+        this.login = login;
+        this.senha = senha;
+        this.ativo = ativo;
     }
 }
