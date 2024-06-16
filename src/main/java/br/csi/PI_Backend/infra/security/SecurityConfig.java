@@ -41,7 +41,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorAtendente").hasAnyAuthority("ADMIN", "ATENDENTE")
                                 .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorTecnico").hasAuthority("TECNICO")
 
-                                .requestMatchers(HttpMethod.POST, "/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
+                                .requestMatchers(HttpMethod.GET, "/upload/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
+                                .requestMatchers(HttpMethod.POST, "/upload/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
 
                                 .anyRequest().authenticated())
                 .addFilterBefore(this.autenticacaoFilter, UsernamePasswordAuthenticationFilter.class)

@@ -7,6 +7,7 @@ import br.csi.PI_Backend.service.pessoa.PessoaService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,9 +31,22 @@ public class FuncionarioService {
         Cargo cargo = this.cargoService.findByNome("TECNICO");
         return this.repository.findFuncionariosByCargoIs(cargo);
     }
-    public List<Funcionario> findAllFuncionarios(){
+    public List<PessoaFuncionario> findAllFuncionarios(){
 
-        return this.repository.findAll();
+        List<Funcionario> funcionarios = this.repository.findAll();
+        List<PessoaFuncionario> pessoaFuncionarioList = new ArrayList<>();
+
+        for(Funcionario funcionario: funcionarios){
+            Pessoa pessoa = funcionario.getPessoa();
+
+            if(pessoa!=null){
+                PessoaFuncionario pessoaFuncionario = new PessoaFuncionario(pessoa, funcionario);
+                pessoaFuncionarioList.add(pessoaFuncionario);
+            }
+        }
+
+
+        return pessoaFuncionarioList;
 
     }
     public boolean Cadastrar(FuncionarioCadastro funcionarioCadastro){
@@ -42,14 +56,7 @@ public class FuncionarioService {
 
         Pessoa pessoa = pessoaService.getByCpf(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
         if(pessoa == null){
-            PessoaDTO pessoaDTO = new PessoaDTO(
-                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().nome(),
-                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().email(),
-                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().telefone(),
-                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().whatsapp(),
-                    funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().cpf());
-
-            pessoa = pessoaService.Cadastrar(pessoaDTO, funcionarioCadastro.pessoaEnderecoDTO().getEnderecoDTO());
+            pessoa = pessoaService.Cadastrar(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO(), funcionarioCadastro.pessoaEnderecoDTO().getEnderecoDTO());
         }
         Funcionario funcionario = new Funcionario();
 
@@ -68,20 +75,17 @@ public class FuncionarioService {
             return false;
         }
     }
-    public void Alterar(FuncionarioDTO funcionarioDTO)
+    public void Alterar(FuncionarioCadastro funcionarioCadastro)
     {
-        Funcionario funcionario = findByLogin(funcionarioDTO.login());
+        Funcionario funcionario = findByLogin(funcionarioCadastro.funcionarioDTO().login());
 
-        funcionario.setLogin(funcionarioDTO.login());
-        funcionario.setSenha(new BCryptPasswordEncoder().encode(funcionarioDTO.senha()));
-        funcionario.setAtivo(funcionarioDTO.ativo());
-        funcionario.setCargo(cargoService.findByNome(funcionarioDTO.cargo()));
+        pessoaService.Atualizar(funcionarioCadastro.pessoaEnderecoDTO());
 
-        try {
-            this.repository.save(funcionario);
-        }catch (Exception e){
-            System.out.println("error: " + e);
-        }
+        funcionario.setLogin(funcionarioCadastro.pessoaEnderecoDTO().getPessoaDTO().email());
+        funcionario.setAtivo(funcionarioCadastro.funcionarioDTO().ativo());
+        funcionario.setCargo(cargoService.findByNome(funcionarioCadastro.funcionarioDTO().cargo()));
+
+        repository.save(funcionario);
     }
     public void Excluir(FuncionarioDTO dadosFuncionario)
     {

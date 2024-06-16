@@ -1,14 +1,19 @@
 package br.csi.PI_Backend.model.ordem_servico;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
+
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class OrdemDeServicoDTO{
@@ -22,7 +27,9 @@ public class OrdemDeServicoDTO{
     private String relatorio_tecnico;
     private BigDecimal custo_total;
     private Timestamp data_criacao;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Date data_previsao;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Date data_entrega;
     private String imagem_caminho;
     private String localizacao;

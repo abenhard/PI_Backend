@@ -1,9 +1,6 @@
 package br.csi.PI_Backend.service.pessoa;
 
-import br.csi.PI_Backend.model.pessoa.EnderecoDTO;
-import br.csi.PI_Backend.model.pessoa.PessoaDTO;
-import br.csi.PI_Backend.model.pessoa.Pessoa;
-import br.csi.PI_Backend.model.pessoa.PessoaRepository;
+import br.csi.PI_Backend.model.pessoa.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,8 +35,9 @@ public class PessoaService {
         }
     }
     public Boolean Atualizar(Pessoa pessoa){
-        Pessoa pessoaAtualizar = this.repository.getById(pessoa.getId());
+        Pessoa pessoaAtualizar = this.repository.getPessoaByCpf(pessoa.getCpf());
         System.out.println("Pessoa enviada= " + pessoa.getNome());
+        System.out.println("Pessoa Atualizar= " + pessoaAtualizar.getNome());
         if(pessoaAtualizar==null)return false;
 
         try {
@@ -61,6 +59,37 @@ public class PessoaService {
         catch (Exception e){
             return false;
         }
+    }
+    public Boolean Atualizar(PessoaEnderecoDTO pessoaEnderecoDTO){
+        PessoaDTO pessoaDTO = pessoaEnderecoDTO.getPessoaDTO();
+        EnderecoDTO enderecoDTO = pessoaEnderecoDTO.getEnderecoDTO();
+
+        Pessoa pessoaAtualizar = this.repository.getPessoaByCpf(pessoaDTO.cpf());
+
+        if(pessoaAtualizar==null)return false;
+
+        try {
+            pessoaAtualizar.setNome(pessoaDTO.nome());
+            pessoaAtualizar.setTelefone(pessoaDTO.telefone());
+            pessoaAtualizar.setWhatsapp(pessoaDTO.whatsapp());
+            pessoaAtualizar.setCpf(pessoaDTO.cpf());
+            pessoaAtualizar.setRua(enderecoDTO.getRua());
+            pessoaAtualizar.setBairro(enderecoDTO.getBairro());
+            pessoaAtualizar.setComplemento(enderecoDTO.getComplemento());
+            pessoaAtualizar.setCep(enderecoDTO.getCep());
+            pessoaAtualizar.setNumero(enderecoDTO.getNumero());
+            pessoaAtualizar.setCidade(enderecoDTO.getCidade());
+            pessoaAtualizar.setEstado(enderecoDTO.getEstado());
+
+            this.repository.save(pessoaAtualizar);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+    public boolean jaExiste(PessoaDTO pessoaDTO){
+        return this.repository.getPessoaByCpfOrEmailOrNome(pessoaDTO.nome(), pessoaDTO.cpf(), pessoaDTO.email()).isEmpty();
     }
     public Pessoa getByCpf(String cpf){
         return this.repository.getPessoaByCpf(cpf);
