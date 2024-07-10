@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,16 +34,17 @@ public class OrdemDeServicoService {
     public boolean cadastrarOrdemAtendente(OrdemDeServicoAtendenteDTO ordemDeServicoDTO) {
         String orderFolderName = UUID.randomUUID().toString();
         String caminhoImagens = "upload/imagens/" + orderFolderName + "/";
+        criaPastaSeNecessario(caminhoImagens);
 
         OrdemDeServico ordemDeServico = new OrdemDeServico(
                 pessoaService.getByCpf(ordemDeServicoDTO.clienteCPF()),
                 funcionarioService.findByLogin(ordemDeServicoDTO.funcionariologin()),
-                ordemDeServicoDTO.status(),
+                "ABERTA",
                 ordemDeServicoDTO.tipo_servico(),
                 ordemDeServicoDTO.descricao_problema()
         );
         ordemDeServico.setData_criacao(Timestamp.from(Instant.now()));
-        ordemDeServico.setImagem_caminho(caminhoImagens);
+        ordemDeServico.setImagem_caminho(orderFolderName);
 
         try {
             this.repository.save(ordemDeServico);
@@ -57,6 +57,7 @@ public class OrdemDeServicoService {
     public void cadastrarOrdemTecnico(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos) {
         String orderFolderName = UUID.randomUUID().toString();
         String caminhoImagens = "upload/imagens/" + orderFolderName + "/";
+        criaPastaSeNecessario(caminhoImagens);
 
         OrdemDeServico ordemDeServico = new OrdemDeServico(
                 pessoaService.getByCpf(ordemDeServicoDTO.getClienteCPF()),
@@ -69,21 +70,25 @@ public class OrdemDeServicoService {
                 null,
                 Timestamp.from(Instant.now()),
                 ordemDeServicoDTO.getData_previsao(),
-                caminhoImagens,
+                orderFolderName,
                 ordemDeServicoDTO.getLocalizacao()
         );
-        if(fotos != null && fotos.length >0){
-            salvaFotos(fotos, ordemDeServico);
+        if (fotos != null && fotos.length > 0) {
+            salvaFotos(fotos, caminhoImagens);
         }
         this.repository.save(ordemDeServico);
     }
 
-
-    public void alterar(OrdemDeServicoDTO ordemDeServicoDTO, MultipartFile[] fotos) {
+    public void alterar(OrdemDeServicoExibicaoDTO ordemDeServicoDTO, MultipartFile[] fotos) {
         OrdemDeServico ordemDeServico = repository.findById(ordemDeServicoDTO.getId())
                 .orElseThrow(() -> new RecursoNotFoundException("Ordem de Servico não encontrada id :: " + ordemDeServicoDTO.getId()));
+        System.out.println("Nome fucionario" + ordemDeServicoDTO.getFuncionarioNome());
+        Pessoa pessoa = this.pessoaService.getByEmail(ordemDeServicoDTO.getFuncionarioNome());
+        Funcionario funcionario = this.funcionarioService.findByLogin(pessoa.getEmail());
 
+        System.out.println("tecnico responsavel: " + funcionario.getPessoa().getNome());
         ordemDeServico.setStatus(ordemDeServicoDTO.getStatus());
+        ordemDeServico.setFuncionario(funcionario);
         ordemDeServico.setTipo_servico(ordemDeServicoDTO.getTipo_servico());
         ordemDeServico.setDescricao_problema(ordemDeServicoDTO.getDescricao_problema());
         ordemDeServico.setProduto_extra(ordemDeServicoDTO.getProduto_extra());
@@ -93,15 +98,19 @@ public class OrdemDeServicoService {
         ordemDeServico.setData_entrega(ordemDeServicoDTO.getData_entrega());
         ordemDeServico.setLocalizacao(ordemDeServicoDTO.getLocalizacao());
 
-        if(fotos != null && fotos.length >0){
-            salvaFotos(fotos, ordemDeServico);
+        String caminhoImagens = "upload/imagens/" + ordemDeServico.getImagem_caminho()+ "/";
+
+        if (fotos != null && fotos.length > 0) {
+            salvaFotos(fotos, caminhoImagens);
         }
         this.repository.save(ordemDeServico);
     }
-    public List<OrdemDeServicoExibicaoDTO> getOrdensDeServico(){
+
+    public List<OrdemDeServicoExibicaoDTO> getOrdensDeServico() {
         List<OrdemDeServico> ordemDeServicos = repository.findAll();
         return setOrdemDeServicoExibicaoDTO(ordemDeServicos);
     }
+
     public OrdemDeServico findOrdemDeServicosById(Long id) {
         return repository.getById(id);
     }
@@ -117,13 +126,8 @@ public class OrdemDeServicoService {
         return ordemDeServicoDTOS;
     }
 
-    public List<OrdemDeServicoDTO> findOrdemDeServicosByPessoaEqualsAndFuncionarioEquals(Pessoa pessoa, Funcionario funcionario) {
-        List<OrdemDeServico> ordemDeServicos = repository.findOrdemDeServicosByPessoaEqualsAndFuncionarioEquals(pessoa, funcionario);
-        return setOrdemDeServicoDTO(ordemDeServicos);
-    }
-
     private List<OrdemDeServicoDTO> setOrdemDeServicoDTO(List<OrdemDeServico> ordemDeServicos) {
-        List<OrdemDeServicoDTO> ordemDeServicoDTOS = new ArrayList<>();;
+        List<OrdemDeServicoDTO> ordemDeServicoDTOS = new ArrayList<>();
 
         for (OrdemDeServico ordemDeServico : ordemDeServicos) {
             OrdemDeServicoDTO ordemDeServicoDTO = new OrdemDeServicoDTO(
@@ -147,6 +151,7 @@ public class OrdemDeServicoService {
 
         return ordemDeServicoDTOS;
     }
+
     private List<OrdemDeServicoExibicaoDTO> setOrdemDeServicoExibicaoDTO(List<OrdemDeServico> ordemDeServicos) {
         List<OrdemDeServicoExibicaoDTO> ordemDeServicoExibicaoDTOS = new ArrayList<>();
 
@@ -178,8 +183,8 @@ public class OrdemDeServicoService {
         return ordemDeServicoExibicaoDTOS;
     }
 
-    private static void salvaFotos(MultipartFile[] fotos, OrdemDeServico ordemDeServico) {
-        File folder = new File(ordemDeServico.getImagem_caminho());
+    private static void salvaFotos(MultipartFile[] fotos, String ordemDeServico) {
+        File folder = new File(ordemDeServico);
         if (!folder.exists()) {
             folder.mkdirs();
         }
@@ -213,4 +218,10 @@ public class OrdemDeServicoService {
         return imageUrls;
     }
 
+    private void criaPastaSeNecessario(String caminhoImagens) {
+        File folder = new File(caminhoImagens);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
 }
