@@ -27,9 +27,9 @@ public class OrdemDeServicoDTO{
     private String relatorio_tecnico;
     private BigDecimal custo_total;
     private Timestamp data_criacao;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date data_previsao;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date data_entrega;
     private String imagem_caminho;
     private String localizacao;

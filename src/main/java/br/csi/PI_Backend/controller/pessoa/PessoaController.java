@@ -45,6 +45,10 @@ public class PessoaController {
     public List<Pessoa> getPessoas(){
         return this.pessoaService.getAllPessoa();
     }
+    @GetMapping("/clientes")
+    public List<Pessoa> getClientes(){
+        return this.pessoaService.getClientesOnly();
+    }
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Pessoa> getPessoaByCpf(@PathVariable String cpf) {
         Pessoa pessoa = pessoaService.getByCpf(cpf);

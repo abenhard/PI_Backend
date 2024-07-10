@@ -94,12 +94,17 @@ public class PessoaService {
     public Pessoa getByCpf(String cpf){
         return this.repository.getPessoaByCpf(cpf);
     }
+    public Pessoa getByNome(String nome){ return  this.repository.getPessoaByNome(nome);}
     public List<Pessoa> findByCpfOrNome(String cpfOrNome){
         return this.repository.findPessoaByCpfOrNome(cpfOrNome);
     }
     public Pessoa getByEmail(String email){return this.repository.getByEmail(email);}
     public Pessoa getById(Long id){ return this.repository.getById(id);}
     public List<Pessoa> getAllPessoa(){
+
         return this.repository.findAll();
+    }
+    public List<Pessoa> getClientesOnly(){
+        return this.repository.findPessoasNotInFuncionarios();
     }
 }

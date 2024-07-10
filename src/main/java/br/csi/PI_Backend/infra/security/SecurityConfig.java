@@ -12,41 +12,49 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final AutenticacaoFilter autenticacaoFilter;
-    public SecurityConfig(AutenticacaoFilter filtro){
-        this.autenticacaoFilter = filtro;
+
+    public SecurityConfig(AutenticacaoFilter autenticacaoFilter) {
+        this.autenticacaoFilter = autenticacaoFilter;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/cadastrar").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/pessoa").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-                                .requestMatchers(HttpMethod.PUT,"/pessoa").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-                                .requestMatchers(HttpMethod.POST,"/pessoa/{cpfOrLogin}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-                                .requestMatchers(HttpMethod.GET,"/funcionario").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.GET,"/funcionario/tecnicos").hasAnyAuthority("ADMIN", "ATENDENTE")
-                                .requestMatchers(HttpMethod.POST,"/funcionario/cadastrar").permitAll()
+                        auth.requestMatchers(HttpMethod.POST, "/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/cadastrar").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/PI_Backend/upload/imagens/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/imagens/{folder}/{imageName}").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/imagens/{orderId}").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO", "ATENDENTE")
+                                .anyRequest().authenticated()
+                )
+                .addFilterBefore(autenticacaoFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-                                .requestMatchers(HttpMethod.GET, "/ordem").hasAnyAuthority("ADMIN","ATENDENTE")
-                                .requestMatchers(HttpMethod.GET, "/ordem/funcionario/{login}").hasAuthority("TECNICO")
-                                .requestMatchers(HttpMethod.GET, "/ordem/{orderId}/images").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-                                .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorAtendente").hasAnyAuthority("ADMIN", "ATENDENTE")
-                                .requestMatchers(HttpMethod.POST, "/ordem/cadastroPorTecnico").hasAuthority("TECNICO")
-
-                                .requestMatchers(HttpMethod.GET, "/upload/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-                                .requestMatchers(HttpMethod.POST, "/upload/imagens/{folderAndImageName}").hasAnyAuthority("ADMIN", "TECNICO","ATENDENTE")
-
-                                .anyRequest().authenticated())
-                .addFilterBefore(this.autenticacaoFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://127.0.0.1:8080"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -59,4 +67,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-

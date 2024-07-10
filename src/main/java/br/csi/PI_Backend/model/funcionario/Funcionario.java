@@ -26,7 +26,7 @@ public class Funcionario {
 
     @NotBlank
     @OneToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "pessoa_id")
+    @JoinColumn(name = "pessoa_id",  referencedColumnName = "id")
     private Pessoa pessoa;
 
     @NotBlank

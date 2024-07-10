@@ -59,7 +59,7 @@ public class OrdemDeServicoController {
 
     @PutMapping("/alterarOrdem")
     @Transactional
-    public ResponseEntity<String> alterar(@Valid OrdemDeServicoDTO ordemDeServicoDTO,
+    public ResponseEntity<String> alterar(@Valid OrdemDeServicoExibicaoDTO ordemDeServicoDTO,
                                           @RequestParam(value = "fotos", required = false) MultipartFile[] fotos,
                                           HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "").trim();
@@ -89,24 +89,6 @@ public class OrdemDeServicoController {
             e.printStackTrace();  // Log the stack trace for debugging
             return ResponseEntity.status(401).build(); // Unauthorized
         }
-    }
-
-    @PostMapping("/{orderId}/images")
-    public ResponseEntity<Void> uploadImages(@PathVariable Long orderId, @RequestParam("files") MultipartFile[] files) throws IOException {
-        imageService.uploadImages(orderId, files);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{orderId}/images")
-    public ResponseEntity<List<String>> getOrderImages(@PathVariable Long orderId) {
-        List<String> imageUrls = imageService.getImageUrls(orderId);
-        return ResponseEntity.ok(imageUrls);
-    }
-
-    @DeleteMapping("/images")
-    public ResponseEntity<Void> deleteImage(@RequestParam String imageUrl) throws IOException {
-        imageService.deleteImage(imageUrl);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/funcionario/{login}")
